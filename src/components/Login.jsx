@@ -2,12 +2,14 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { BASE_URL } from "../utils/constants";
+import { useDispatch } from "react-redux";
+import { addUser } from "../utils/userSlice";
 const Login = () => {
     const [emailId, setEmailId] = useState("rutvik@gmail.com");
     const [password, setPassword] = useState("Rutvik@123");
     const navigate = useNavigate();
     const [error, setError] = useState("");
-
+    const dispatch = useDispatch();
 
     const handleLogin = async () => {
     try {
@@ -19,7 +21,8 @@ const Login = () => {
         },
         { withCredentials: true }
       );
-      console.log(res);
+    //   console.log(res);
+      dispatch( addUser(res.data));
       return navigate("/");
     } catch (err) {
       setError(err?.response?.data || "Something went wrong");
@@ -27,57 +30,92 @@ const Login = () => {
   };
 
     return (
-        <div className="flex justify-center my-10">
-            <div className="card bg-base-300 w-96 shadow-xl">
-                <div className="card-body">
-                    <h2 className="card-title justify-center">
-                        Login
-                    </h2>
-                    <div>
-                        <label className="form-control w-full max-w-xs my-2">
-                        <div className="label">
-                            <span className="label-text">Email ID:</span>
-                        </div>
-                        <input
-                            type="text"
-                            value={emailId}
-                            className="input input-bordered w-full max-w-xs"
-                            onChange={(e) => setEmailId(e.target.value)}
-                        />
-                        </label>
-                        <label className="form-control w-full max-w-xs my-2">
-                        <div className="label">
-                            <span className="label-text">Password</span>
-                        </div>
-                        <input
-                            type="password"
-                            value={password}
-                            className="input input-bordered w-full max-w-xs"
-                            onChange={(e) => setPassword(e.target.value)}
-                        />
-                        </label>
+        <div className="flex justify-center items-center min-h-screen bg-base-200">
+            <div className="card w-96 bg-base-100 shadow-2xl border border-base-300">
+                <div className="card-body gap-4">
+
+                {/* Title */}
+                <h2 className="text-2xl font-bold text-center">
+                    Welcome Back 👋
+                </h2>
+                <p className="text-center text-sm text-gray-500">
+                    Login to your account
+                </p>
+
+                <div className="divider my-1"></div>
+
+                {/* Email */}
+                <label className="form-control w-full">
+                    <div className="label">
+                    <span className="label-text font-medium">Email</span>
                     </div>
-                    <p className="text-red-500">{error}</p>
-                    <div className="card-actions mt-4">
-                        <button
-                            onClick={handleLogin}
-                            className="
-                            btn btn-primary w-full
-                            text-base font-semibold tracking-wide
-                            rounded-xl
-                            shadow-lg
-                            hover:shadow-xl
-                            transition-all duration-200
-                            hover:scale-[1.02]
-                            active:scale-95
-                            "
-                        >
-                            Login
-                        </button>
-                        </div>
+                    <input
+                    type="email"
+                    value={emailId}
+                    onChange={(e) => setEmailId(e.target.value)}
+                    placeholder="you@example.com"
+                    className="
+                        input input-bordered w-full
+                        focus:outline-none focus:border-primary
+                        transition-all
+                    "
+                    />
+                </label>
+
+                {/* Password */}
+                <label className="form-control w-full">
+                    <div className="label">
+                    <span className="label-text font-medium">Password</span>
+                    </div>
+                    <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="••••••••"
+                    className="
+                        input input-bordered w-full
+                        focus:outline-none focus:border-primary
+                        transition-all
+                    "
+                    />
+                </label>
+
+                {/* Error */}
+                {error && (
+                    <div className="alert alert-error py-2 text-sm">
+                    {error}
+                    </div>
+                )}
+
+                {/* Button */}
+                <button
+                    onClick={handleLogin}
+                    className="
+                    btn btn-primary w-full mt-2
+                    text-base font-semibold
+                    rounded-xl
+                    shadow-md
+                    hover:shadow-xl
+                    transition-all duration-200
+                    hover:scale-[1.02]
+                    active:scale-95
+                    "
+                >
+                    Login
+                </button>
+
+                {/* Footer */}
+                <p className="text-center text-sm text-gray-500 mt-2">
+                    Don’t have an account?{" "}
+                    <span className="text-primary cursor-pointer hover:underline">
+                    Sign up
+                    </span>
+                </p>
+
                 </div>
             </div>
         </div>
+
     );
 };
 export default Login;
